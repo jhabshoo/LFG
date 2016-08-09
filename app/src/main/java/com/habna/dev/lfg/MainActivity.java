@@ -14,6 +14,7 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.local.UserIdStorageFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +37,21 @@ public class MainActivity extends AppCompatActivity {
         if (!response)  {
           finish();
           startLoginActivity();
+        } else  {
+          String userToken = UserIdStorageFactory.instance().getStorage().get();
+          if (userToken != null && !userToken.isEmpty())  {
+            Backendless.UserService.findById(userToken, new AsyncCallback<BackendlessUser>() {
+              @Override
+              public void handleResponse(BackendlessUser response) {
+                backendlessUser = response;
+              }
+
+              @Override
+              public void handleFault(BackendlessFault fault) {
+
+              }
+            });
+          }
         }
       }
 
@@ -53,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
     fab.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-          .setAction("Action", null).show();
+        Intent intent = new Intent(MainActivity.this, AddGroup.class);
+        startActivity(intent);
       }
     });
   }

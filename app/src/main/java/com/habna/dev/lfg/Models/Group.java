@@ -1,5 +1,6 @@
 package com.habna.dev.lfg.Models;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,27 +10,35 @@ import java.util.Set;
  */
 public class Group {
 
+  private String objectId;
   private String title;
   private String description;
   private String owner; //e-mail address possible
   private int minParticipants;
   private int maxParticipants;
-  private Set<String> participants;
-  private Date start;
+  private Date startDate;
+  private Date startTime;
 
   public Group() {
   }
 
   public Group(String title, String description, String owner, int minParticipants,
-               int maxParticipants, Date start) {
+               int maxParticipants, Date startDate, Time startTime) {
     this.title = title;
     this.description = description;
     this.owner = owner;
     this.minParticipants = minParticipants;
     this.maxParticipants = maxParticipants;
-    this.start = start;
-    participants = new HashSet<>();
-    participants.add(owner);
+    this.startDate = startDate;
+    this.startTime = startTime;
+  }
+
+  public String getObjectId() {
+    return objectId;
+  }
+
+  public void setObjectId(String objectId) {
+    this.objectId = objectId;
   }
 
   public String getTitle() {
@@ -72,27 +81,19 @@ public class Group {
     this.maxParticipants = maxParticipants;
   }
 
-  public Set<String> getParticipants() {
-    return participants;
+  public Date getStartDate() {
+    return startDate;
   }
 
-  public void setParticipants(Set<String> participants) {
-    this.participants = participants;
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
   }
 
-  public Date getStart() {
-    return start;
+  public Date getStartTime() {
+    return startTime;
   }
 
-  public void setStart(Date start) {
-    this.start = start;
-  }
-
-  public boolean isSatisfied()  {
-    return participants.size() >= minParticipants;
-  }
-
-  public boolean isFull() {
-    return participants.size() == maxParticipants;
+  public void setStartTime(Date startTime) {
+    this.startTime = startTime;
   }
 }

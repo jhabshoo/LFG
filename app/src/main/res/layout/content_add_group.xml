@@ -17,23 +17,54 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/titleEditText"
-        android:hint="@string/titleHint"/>
+        android:hint="@string/titleHint"
+        android:imeOptions="actionDone"
+        android:inputType="textCapWords"/>
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/descEditText"
         android:hint="@string/descHint"
-        android:layout_below="@id/titleEditText"/>
+        android:layout_below="@id/titleEditText"
+        android:imeOptions="actionDone"
+        android:inputType="textCapSentences"/>
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/minParticipantsEditText"
         android:hint="@string/minParticipantsHint"
-        android:layout_below="@id/descEditText"/>
+        android:layout_below="@id/descEditText"
+        android:imeOptions="actionDone"
+        android:inputType="number"/>
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/maxParticipantsEditText"
         android:hint="@string/maxParticipantsHint"
-        android:layout_below="@id/minParticipantsEditText"/>
+        android:layout_below="@id/minParticipantsEditText"
+        android:imeOptions="actionDone"
+        android:inputType="number"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dateEditText"
+        android:hint="@string/dateHint"
+        android:layout_below="@id/maxParticipantsEditText"
+        android:inputType="date"
+        android:imeOptions="actionDone"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timeEditText"
+        android:hint="@string/timeHint"
+        android:layout_below="@id/dateEditText"
+        android:inputType="time"
+        android:imeOptions="actionDone"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addGroupButton"
+        android:text="@string/addGroupButtonText"
+        android:layout_below="@id/timeEditText"/>
 </RelativeLayout>

@@ -7,7 +7,9 @@
     <string name="descHint">Description</string>
     <string name="minParticipantsHint">Minimum Attendees</string>
     <string name="maxParticipantsHint">Maximum Attendees</string>
-    <string name="startHint">Start Date/Time</string>
+    <string name="dateHint">Date</string>
+    <string name="timeHint">Time</string>
+    <string name="addGroupButtonText">Create Group</string>
 
     <string name="title_activity_add_group">AddGroup</string>
     <string name="title_activity_login">Sign in</string>
