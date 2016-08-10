@@ -39,6 +39,11 @@
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up">
         </activity>
+        <activity
+            android:name=".GroupActivity"
+            android:label="@string/title_activity_group"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

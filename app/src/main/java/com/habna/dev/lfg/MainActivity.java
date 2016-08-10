@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,9 +23,9 @@ import com.backendless.persistence.local.UserIdStorageFactory;
 import com.habna.dev.lfg.Models.Group;
 import com.habna.dev.lfg.Models.GroupParticipant;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,6 +69,25 @@ public class MainActivity extends AppCompatActivity {
     joinedGroupListView.setAdapter(joinedGroupListAdapter);
     openGroupListView.setAdapter(openGroupListAdapter);
 
+    openGroupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Group selectedGroup = (Group) adapterView.getItemAtPosition(i);
+        if (selectedGroup != null)  {
+          startGroupActivity(selectedGroup, false);
+        }
+      }
+    });
+    joinedGroupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Group selectedGroup = (Group) adapterView.getItemAtPosition(i);
+        if (selectedGroup != null)  {
+          startGroupActivity(selectedGroup, true);
+        }
+      }
+    });
+
     Backendless.initApp(this, BACKENDLESS_APP_ID, BACKENDLESS_SECRET_KEY, BACKENDLESS_VERSION);
     AsyncCallback<Boolean> isValidLoginCallback = new AsyncCallback<Boolean>() {
       @Override
@@ -85,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 backendlessUser = response;
                 Object nickname = backendlessUser.getProperty("nickname");
                 welcomeText.setText("Welcome " + (nickname == null ?
-                  backendlessUser.getEmail() : nickname) + "\n");
+                  backendlessUser.getEmail() : nickname) + "! \n");
                 loadGroups();
               }
 
@@ -109,31 +128,56 @@ public class MainActivity extends AppCompatActivity {
     Backendless.UserService.isValidLogin(isValidLoginCallback);
   }
 
+  private void startGroupActivity(Group group, boolean joined)  {
+    GroupActivity.group = group;
+    GroupActivity.joined = joined;
+    startActivity(new Intent(MainActivity.this, GroupActivity.class));
+  }
+
   private void loadGroups() {
     loadJoinedGroups();
     loadOpenGroups();
   }
 
   private void loadOpenGroups() {
-    AsyncCallback<BackendlessCollection<Group>> loadGroupsCallback =
-      new AsyncCallback<BackendlessCollection<Group>>() {
+    final Set<String> userGroups = new HashSet<>();
+    AsyncCallback<BackendlessCollection<GroupParticipant>> loadGPCallback =
+      new AsyncCallback<BackendlessCollection<GroupParticipant>>() {
         @Override
-        public void handleResponse(BackendlessCollection<Group> response) {
-          for (Group group : response.getCurrentPage()) {
-            openGroupListAdapter.addGroup(group);
+        public void handleResponse(BackendlessCollection<GroupParticipant> response) {
+          for (GroupParticipant groupParticipant : response.getCurrentPage()) {
+            userGroups.add(groupParticipant.getGroupId());
           }
-          openGroupListAdapter.notifyDataSetChanged();
+          BackendlessDataQuery query = new BackendlessDataQuery();
+          query.setWhereClause("owner != '" + backendlessUser.getEmail() + "' " +
+            "and inviteOnly = 'F'");
+          Backendless.Persistence.of(Group.class).find(query,
+            new AsyncCallback<BackendlessCollection<Group>>() {
+            @Override
+            public void handleResponse(BackendlessCollection<Group> response) {
+              for (Group group : response.getCurrentPage()) {
+                if (!userGroups.contains(group.getObjectId())) {
+                  openGroupListAdapter.addGroup(group);
+                }
+              }
+              openGroupListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+              Log.e("ERROR", "While finding groups user belongs to: " + fault.getMessage());
+            }
+          });
         }
 
         @Override
         public void handleFault(BackendlessFault fault) {
-          Log.e("ERROR", fault.getMessage());
+          Log.e("ERROR", "While finding group participant recs for user: " + fault.getMessage());
         }
       };
-    BackendlessDataQuery query = new BackendlessDataQuery();
-    query.setWhereClause("owner != '" + backendlessUser.getEmail() + "' " +
-      "and inviteOnly = 'F'");
-    Backendless.Persistence.of(Group.class).find(query, loadGroupsCallback);
+    BackendlessDataQuery gpQuery = new BackendlessDataQuery();
+    gpQuery.setWhereClause("participant = '" + backendlessUser.getEmail() + "'");
+    Backendless.Persistence.of(GroupParticipant.class).find(gpQuery, loadGPCallback);
   }
 
   private void loadJoinedGroups() {
@@ -217,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  private void doLogout() {
+  public static void doLogout() {
     Backendless.UserService.logout(new AsyncCallback<Void>() {
       @Override
       public void handleResponse(Void response) {

@@ -13,6 +13,9 @@
     <string name="inviteOnlyHint">Invite Only</string>
     <string name="addGroupButtonText">Create Group</string>
 
+    <!-- GroupActivity -->
+    <string name="joinButtonHint">Join!</string>
+
     <string name="title_activity_add_group">AddGroup</string>
     <string name="title_activity_login">Sign in</string>
 
@@ -34,4 +37,5 @@
     <string name="action_sign_up_short">Sign up</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="title_activity_group">GroupActivity</string>
 </resources>

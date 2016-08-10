@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -35,6 +37,8 @@ public class AddGroup extends AppCompatActivity {
     setContentView(R.layout.activity_add_group);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setDisplayShowHomeEnabled(true);
 
     final EditText titleText = (EditText) findViewById(R.id.titleEditText);
     final EditText descText = (EditText) findViewById(R.id.descEditText);
@@ -143,7 +147,16 @@ public class AddGroup extends AppCompatActivity {
         }
       }
     });
+  }
 
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int id = item.getItemId();
+    if (id == android.R.id.home)  {
+      finish();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   private boolean validateTitle(String title) {
