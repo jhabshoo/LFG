@@ -15,6 +15,7 @@
 
     <!-- GroupActivity -->
     <string name="joinButtonHint">Join!</string>
+    <string name="addMessageHint">Got something to say?</string>
 
     <string name="title_activity_add_group">AddGroup</string>
     <string name="title_activity_login">Sign in</string>
