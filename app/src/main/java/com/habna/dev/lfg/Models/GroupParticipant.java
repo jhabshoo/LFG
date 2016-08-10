@@ -1,7 +1,7 @@
 package com.habna.dev.lfg.Models;
 
 /**
- * Created by jhabs on 8/9/2016.
+ * Represents relationship between user participant and Group.
  */
 public class GroupParticipant {
 

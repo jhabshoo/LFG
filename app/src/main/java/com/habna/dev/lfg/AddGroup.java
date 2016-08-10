@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -122,13 +123,14 @@ public class AddGroup extends AppCompatActivity {
 
                 @Override
                 public void handleFault(BackendlessFault fault) {
-
+                  Log.e("ERROR", fault.getMessage());
                 }
               });
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
+              Log.e("ERROR", fault.getMessage());
             }
           });
         } else  {

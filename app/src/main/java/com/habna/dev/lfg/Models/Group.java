@@ -2,8 +2,6 @@ package com.habna.dev.lfg.Models;
 
 import java.sql.Time;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Represents Group to be added, searched, and joined by other users
