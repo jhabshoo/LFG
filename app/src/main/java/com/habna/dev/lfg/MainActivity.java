@@ -102,9 +102,7 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void handleResponse(BackendlessUser response) {
                 backendlessUser = response;
-                Object nickname = backendlessUser.getProperty("nickname");
-                welcomeText.setText("Welcome " + (nickname == null ?
-                  backendlessUser.getEmail() : nickname) + "! \n");
+                handleNickname();
                 loadGroups();
               }
 
@@ -132,6 +130,18 @@ public class MainActivity extends AppCompatActivity {
     GroupActivity.group = group;
     GroupActivity.joined = joined;
     startActivity(new Intent(MainActivity.this, GroupActivity.class));
+  }
+
+  private void handleNickname() {
+    Object nicknameObj = backendlessUser.getProperty("nickname");
+    String nickname;
+    if (nicknameObj == null) {
+      nickname = backendlessUser.getEmail().substring(0, backendlessUser.getEmail().indexOf("@"));
+      backendlessUser.setProperty("nickname", nickname);
+    } else  {
+      nickname = nicknameObj.toString();
+    }
+    welcomeText.setText("Welcome " + nickname + "! \n");
   }
 
   private void loadGroups() {

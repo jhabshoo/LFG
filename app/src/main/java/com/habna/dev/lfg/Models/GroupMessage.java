@@ -7,14 +7,16 @@ public class GroupMessage {
   private String message;
   private String participant;
   private String groupId;
+  private String nickname;
 
   public GroupMessage() {
   }
 
-  public GroupMessage(String message, String participant, String groupId) {
+  public GroupMessage(String message, String participant, String groupId, String nickname) {
     this.message = message;
     this.participant = participant;
     this.groupId = groupId;
+    this.nickname = nickname;
   }
 
   public String getMessage() {
@@ -39,5 +41,13 @@ public class GroupMessage {
 
   public void setGroupId(String groupId) {
     this.groupId = groupId;
+  }
+
+  public String getNickname() {
+    return nickname;
+  }
+
+  public void setNickname(String nickname) {
+    this.nickname = nickname;
   }
 }

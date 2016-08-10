@@ -26,7 +26,9 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
+import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessException;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
 import com.habna.dev.lfg.Models.Group;
@@ -42,6 +44,7 @@ import java.util.Set;
 
 public class GroupActivity extends AppCompatActivity {
 
+  public static final String NICKNAME_KEY = "nickname";
   public static Group group;
   public static boolean joined;
 
@@ -94,7 +97,7 @@ public class GroupActivity extends AppCompatActivity {
       @Override
       public void handleResponse(BackendlessCollection<GroupMessage> response) {
         for (GroupMessage groupMessage : response.getCurrentPage()) {
-          messagesAdapter.add(getDisplayMessageString(groupMessage));
+          messagesAdapter.add(getGroupMessageString(groupMessage));
         }
         messagesAdapter.notifyDataSetChanged();
         loadTextViews();
@@ -152,6 +155,7 @@ public class GroupActivity extends AppCompatActivity {
             if (!TextUtils.isEmpty(addMessage.getText().toString())) {
               addMessageRec(addMessage.getText().toString());
             }
+            // hide done and reset text
             InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             in.hideSoftInputFromWindow(addMessage.getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             addMessage.setText("");
@@ -174,11 +178,11 @@ public class GroupActivity extends AppCompatActivity {
 
   private void addMessageRec(final String message) {
     GroupMessage groupMessage = new GroupMessage(message, MainActivity.backendlessUser.getEmail(),
-      group.getObjectId());
+      group.getObjectId(), MainActivity.backendlessUser.getProperty(NICKNAME_KEY).toString());
     Backendless.Persistence.save(groupMessage, new AsyncCallback<GroupMessage>() {
       @Override
       public void handleResponse(GroupMessage response) {
-        messagesAdapter.add(getDisplayMessageString(response));
+        messagesAdapter.add(getGroupMessageString(response));
         messagesAdapter.notifyDataSetChanged();
       }
 
@@ -190,8 +194,8 @@ public class GroupActivity extends AppCompatActivity {
   }
 
   @NonNull
-  private String getDisplayMessageString(GroupMessage response) {
-    return response.getParticipant() + ": " + response.getMessage();
+  private String getGroupMessageString(GroupMessage response) {
+    return response.getNickname() + ": " + response.getMessage();
   }
 
   @Override
