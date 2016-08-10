@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -22,6 +23,8 @@ import com.backendless.persistence.local.UserIdStorageFactory;
 import com.habna.dev.lfg.Models.Group;
 import com.habna.dev.lfg.Models.GroupParticipant;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
   public static BackendlessUser backendlessUser;
   private GroupListAdapter joinedGroupListAdapter;
   private GroupListAdapter openGroupListAdapter;
+  private TextView welcomeText;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
+    welcomeText = (TextView) findViewById(R.id.mainWelcomeText);
     final TextView joinedHeader = new TextView(this);
     joinedHeader.setText("Joined Groups");
     final TextView openHeader = new TextView(this);
@@ -78,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void handleResponse(BackendlessUser response) {
                 backendlessUser = response;
+                Object nickname = backendlessUser.getProperty("nickname");
+                welcomeText.setText("Welcome " + (nickname == null ?
+                  backendlessUser.getEmail() : nickname) + "\n");
                 loadGroups();
               }
 
@@ -86,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("ERROR", fault.getMessage());
               }
             });
-          } else  {
+          } else if (backendlessUser == null) {
             finish();
             startLoginActivity();
           }

@@ -13,10 +13,16 @@
     tools:context="com.habna.dev.lfg.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/mainWelcomeText"/>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="230dp"
-        android:id="@+id/joinedGroupList"/>
+        android:id="@+id/joinedGroupList"
+        android:layout_below="@id/mainWelcomeText"/>
 
     <ListView
         android:layout_width="match_parent"

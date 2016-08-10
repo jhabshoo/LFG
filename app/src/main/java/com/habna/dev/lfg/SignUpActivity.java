@@ -45,7 +45,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
   private BackendlessUser backendlessUser;
 
@@ -57,24 +57,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
   /**
    * Keep track of the login task to ensure we can cancel it if requested.
    */
-  private UserLoginTask mAuthTask = null;
+  private UserSignUpTask mAuthTask = null;
 
   // UI references.
   private AutoCompleteTextView mEmailView;
   private EditText mPasswordView;
+  private EditText mNicknameView;
   private View mProgressView;
   private View mLoginFormView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_login);
-
+    setContentView(R.layout.activity_sign_up);
     // Set up the login form.
-    mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+    mEmailView = (AutoCompleteTextView) findViewById(R.id.signUpEmail);
     populateAutoComplete();
 
-    mPasswordView = (EditText) findViewById(R.id.password);
+    mPasswordView = (EditText) findViewById(R.id.signUpPassword);
     mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -86,26 +86,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
       }
     });
 
-    Button mLoginButton = (Button) findViewById(R.id.login_button);
-    mLoginButton.setOnClickListener(new OnClickListener() {
+    mNicknameView = (EditText) findViewById(R.id.signUpNickname);
+
+    Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_up_button);
+    mEmailSignInButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
         attemptLogin();
       }
     });
 
-    Button mSignUpButton = (Button) findViewById(R.id.goto_signUp_button);
-    mSignUpButton.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-        finish();
-        startActivity(intent);
-      }
-    });
-
-    mLoginFormView = findViewById(R.id.login_form);
-    mProgressView = findViewById(R.id.login_progress);
+    mLoginFormView = findViewById(R.id.signUp_form);
+    mProgressView = findViewById(R.id.signUp_progress);
   }
 
   private void populateAutoComplete() {
@@ -169,6 +161,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // Store values at the time of the login attempt.
     String email = mEmailView.getText().toString();
     String password = mPasswordView.getText().toString();
+    String nickName = mNicknameView.getText().toString();
 
     boolean cancel = false;
     View focusView = null;
@@ -189,6 +182,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
       mEmailView.setError(getString(R.string.error_invalid_email));
       focusView = mEmailView;
       cancel = true;
+    } else if (TextUtils.isEmpty(nickName)) {
+      mNicknameView.setError(getString(R.string.error_field_required));
+      focusView = mNicknameView;
+      cancel = true;
     }
 
     if (cancel) {
@@ -199,13 +196,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
       // Show a progress spinner, and kick off a background task to
       // perform the user login attempt.
       showProgress(true);
-      mAuthTask = new UserLoginTask(email, password);
+      mAuthTask = new UserSignUpTask(email, password, nickName);
       mAuthTask.execute((Void) null);
     }
   }
 
   private void startMainActivity() {
-    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
     MainActivity.backendlessUser = backendlessUser;
     startActivity(intent);
   }
@@ -300,36 +297,42 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     int IS_PRIMARY = 1;
   }
 
-
   private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
     //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
     ArrayAdapter<String> adapter =
-      new ArrayAdapter<>(LoginActivity.this,
+      new ArrayAdapter<>(SignUpActivity.this,
         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
     mEmailView.setAdapter(adapter);
   }
 
   /**
-   * Represents an asynchronous login task used to authenticate
+   * Represents an asynchronous login/registration task used to authenticate
    * the user.
    */
-  public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+  public class UserSignUpTask extends AsyncTask<Void, Void, Boolean> {
 
     private final String mEmail;
     private final String mPassword;
+    private final String mNickname;
     private BackendlessException mException;
 
-    UserLoginTask(String email, String password) {
+    UserSignUpTask(String email, String password, String nickname) {
       mEmail = email;
       mPassword = password;
+      mNickname = nickname;
       mException = null;
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
+      BackendlessUser user = new BackendlessUser();
+      user.setEmail(mEmail);
+      user.setPassword(mPassword);
+      user.setProperty("nickname", mNickname);
       try {
-        backendlessUser = Backendless.UserService.login(mEmail, mPassword, true);
+        backendlessUser = Backendless.UserService.register(user);
+        backendlessUser = Backendless.UserService.login(backendlessUser.getEmail(), backendlessUser.getPassword(), true);
       } catch (BackendlessException be) {
         Log.e("ERROR", be.getMessage(), be);
         mException = be;
@@ -342,7 +345,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
       mAuthTask = null;
       showProgress(false);
 
-      if (success && (mException == null)) {
+      if (success && mException == null) {
         finish();
         startMainActivity();
       } else {
