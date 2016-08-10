@@ -33,38 +33,62 @@
         android:layout_height="wrap_content"
         android:id="@+id/minParticipantsEditText"
         android:hint="@string/minParticipantsHint"
-        android:layout_below="@id/descEditText"
         android:imeOptions="actionDone"
-        android:inputType="number"/>
+        android:inputType="number"
+        android:layout_above="@+id/dateEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/titleEditText"
+        android:layout_alignEnd="@+id/titleEditText"/>
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/maxParticipantsEditText"
         android:hint="@string/maxParticipantsHint"
-        android:layout_below="@id/minParticipantsEditText"
         android:imeOptions="actionDone"
-        android:inputType="number"/>
+        android:inputType="number"
+        android:layout_alignTop="@+id/minParticipantsEditText"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/inviteOnlySwitch"
+        android:layout_alignStart="@+id/inviteOnlySwitch"/>
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/dateEditText"
         android:hint="@string/dateHint"
-        android:layout_below="@id/maxParticipantsEditText"
         android:inputType="date"
-        android:imeOptions="actionDone"/>
+        android:imeOptions="actionDone"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timeEditText"
         android:hint="@string/timeHint"
-        android:layout_below="@id/dateEditText"
         android:inputType="time"
-        android:imeOptions="actionDone"/>
-
+        android:imeOptions="actionDone"
+        android:layout_alignTop="@+id/dateEditText"
+        android:layout_toRightOf="@+id/addGroupButton"
+        android:layout_toEndOf="@+id/addGroupButton"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/addGroupButton"
         android:text="@string/addGroupButtonText"
-        android:layout_below="@id/timeEditText"/>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="58dp"/>
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/inviteOnlyHint"
+        android:id="@+id/inviteOnlySwitch"
+        android:checked="false"
+        android:layout_alignBottom="@+id/titleEditText"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
 </RelativeLayout>

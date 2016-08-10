@@ -16,12 +16,13 @@ public class Group {
   private int maxParticipants;
   private Date startDate;
   private Date startTime;
+  private boolean inviteOnly;
 
   public Group() {
   }
 
   public Group(String title, String description, String owner, int minParticipants,
-               int maxParticipants, Date startDate, Time startTime) {
+               int maxParticipants, Date startDate, Time startTime, boolean inviteOnly) {
     this.title = title;
     this.description = description;
     this.owner = owner;
@@ -29,6 +30,7 @@ public class Group {
     this.maxParticipants = maxParticipants;
     this.startDate = startDate;
     this.startTime = startTime;
+    this.inviteOnly = inviteOnly;
   }
 
   public String getObjectId() {
@@ -93,5 +95,13 @@ public class Group {
 
   public void setStartTime(Date startTime) {
     this.startTime = startTime;
+  }
+
+  public boolean isInviteOnly() {
+    return inviteOnly;
+  }
+
+  public void setInviteOnly(boolean inviteOnly) {
+    this.inviteOnly = inviteOnly;
   }
 }

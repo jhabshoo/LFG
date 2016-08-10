@@ -1,14 +1,16 @@
 <resources>
     <string name="app_name">LFG</string>
     <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
 
     <!-- AddGroup form hints -->
     <string name="titleHint">Group Title</string>
     <string name="descHint">Description</string>
-    <string name="minParticipantsHint">Minimum Attendees</string>
-    <string name="maxParticipantsHint">Maximum Attendees</string>
+    <string name="minParticipantsHint">Min</string>
+    <string name="maxParticipantsHint">Max</string>
     <string name="dateHint">Date</string>
     <string name="timeHint">Time</string>
+    <string name="inviteOnlyHint">Invite Only</string>
     <string name="addGroupButtonText">Create Group</string>
 
     <string name="title_activity_add_group">AddGroup</string>

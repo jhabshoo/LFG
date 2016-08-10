@@ -2,6 +2,7 @@ package com.habna.dev.lfg;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ public class AddGroup extends AppCompatActivity {
     final EditText maxParticipantsText = (EditText) findViewById(R.id.maxParticipantsEditText);
     final EditText dateText = (EditText) findViewById(R.id.dateEditText);
     final EditText timeText = (EditText) findViewById(R.id.timeEditText);
+    final Switch inviteOnlySwitch = (Switch) findViewById(R.id.inviteOnlySwitch);
     final Button addGroupButton = (Button) findViewById(R.id.addGroupButton);
     final Calendar now = Calendar.getInstance();
     dateText.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +76,7 @@ public class AddGroup extends AppCompatActivity {
             if (i1 < 10)  {
               minString = "0"+i1;
             }
-            timeText.setText(i + ":" + minString + timeOfDay);
+            timeText.setText((i == 0 ? 12 : i) + ":" + minString + timeOfDay);
           }
         },
           now.get(Calendar.AM_PM) == 1 ? now.get(Calendar.HOUR) + 12 : now.get(Calendar.HOUR),
@@ -110,15 +113,17 @@ public class AddGroup extends AppCompatActivity {
             minParticipantsText.getText().toString().isEmpty() ? 1 : Integer.valueOf(minParticipantsText.getText().toString()),
             maxParticipantsText.getText().toString().isEmpty() ? -1 : Integer.valueOf(maxParticipantsText.getText().toString()),
             new Date(Integer.valueOf(dateParts[2]), Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1])),
-            new Time(hour, minute, 0));
+            new Time(hour, minute, 0), inviteOnlySwitch.isChecked());
           Backendless.Persistence.save(group, new AsyncCallback<Group>() {
             @Override
             public void handleResponse(Group response) {
-              GroupParticipant groupParticipant = new GroupParticipant(response.getObjectId(), response.getOwner());
+              GroupParticipant groupParticipant = new GroupParticipant(response.getObjectId(),
+                response.getOwner(), GroupParticipant.OWNER);
               Backendless.Persistence.save(groupParticipant, new AsyncCallback<GroupParticipant>() {
                 @Override
                 public void handleResponse(GroupParticipant response) {
                   finish();
+                  startActivity(new Intent(AddGroup.this, MainActivity.class));
                 }
 
                 @Override
