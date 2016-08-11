@@ -62,6 +62,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
   // UI references.
   private AutoCompleteTextView mEmailView;
   private EditText mPasswordView;
+  private EditText mConfirmPasswordView;
   private EditText mNicknameView;
   private View mProgressView;
   private View mLoginFormView;
@@ -75,16 +76,17 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     populateAutoComplete();
 
     mPasswordView = (EditText) findViewById(R.id.signUpPassword);
-    mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-      @Override
-      public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-        if (id == R.id.login || id == EditorInfo.IME_NULL) {
-          attemptLogin();
-          return true;
-        }
-        return false;
-      }
-    });
+    mConfirmPasswordView = (EditText) findViewById(R.id.signUpConfirmPassword);
+//    mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//      @Override
+//      public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+//        if (id == R.id.login || id == EditorInfo.IME_NULL) {
+//          attemptLogin();
+//          return true;
+//        }
+//        return false;
+//      }
+//    });
 
     mNicknameView = (EditText) findViewById(R.id.signUpNickname);
 
@@ -161,6 +163,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     // Store values at the time of the login attempt.
     String email = mEmailView.getText().toString();
     String password = mPasswordView.getText().toString();
+    String confirmPassword = mConfirmPasswordView.getText().toString();
     String nickName = mNicknameView.getText().toString();
 
     boolean cancel = false;
@@ -171,7 +174,12 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
       mPasswordView.setError(getString(R.string.error_invalid_password));
       focusView = mPasswordView;
       cancel = true;
+    } else if (!password.equals(confirmPassword))  {
+      mPasswordView.setError(getString(R.string.error_passwords_dont_match));
+      focusView = mPasswordView;
+      cancel = true;
     }
+
 
     // Check for a valid email address.
     if (TextUtils.isEmpty(email)) {
