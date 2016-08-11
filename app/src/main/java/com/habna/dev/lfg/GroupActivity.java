@@ -177,7 +177,7 @@ public class GroupActivity extends AppCompatActivity {
   }
 
   private void addMessageRec(final String message) {
-    GroupMessage groupMessage = new GroupMessage(message, MainActivity.backendlessUser.getEmail(),
+    GroupMessage groupMessage = new GroupMessage(message, MainActivity.backendlessUser.getUserId(),
       group.getObjectId(), MainActivity.backendlessUser.getProperty(NICKNAME_KEY).toString());
     Backendless.Persistence.save(groupMessage, new AsyncCallback<GroupMessage>() {
       @Override
@@ -229,7 +229,7 @@ public class GroupActivity extends AppCompatActivity {
 
   private void joinGroup()  {
     GroupParticipant groupParticipant = new GroupParticipant(group.getObjectId(),
-      MainActivity.backendlessUser.getEmail(), GroupParticipant.MEMBER);
+      MainActivity.backendlessUser.getUserId(), GroupParticipant.MEMBER);
     Backendless.Persistence.save(groupParticipant, new AsyncCallback<GroupParticipant>() {
       @Override
       public void handleResponse(GroupParticipant response) {

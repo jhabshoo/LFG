@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
             userGroups.add(groupParticipant.getGroupId());
           }
           BackendlessDataQuery query = new BackendlessDataQuery();
-          query.setWhereClause("owner != '" + backendlessUser.getEmail() + "' " +
+          query.setWhereClause("owner != '" + backendlessUser.getUserId() + "' " +
             "and inviteOnly = 'F'");
           Backendless.Persistence.of(Group.class).find(query,
             new AsyncCallback<BackendlessCollection<Group>>() {
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         }
       };
     BackendlessDataQuery gpQuery = new BackendlessDataQuery();
-    gpQuery.setWhereClause("participant = '" + backendlessUser.getEmail() + "'");
+    gpQuery.setWhereClause("participant = '" + backendlessUser.getUserId() + "'");
     Backendless.Persistence.of(GroupParticipant.class).find(gpQuery, loadGPCallback);
   }
 
@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     BackendlessDataQuery gpQuery = new BackendlessDataQuery();
-    gpQuery.setWhereClause("participant = '" + backendlessUser.getEmail() + "'");
+    gpQuery.setWhereClause("participant = '" + backendlessUser.getUserId() + "'");
     Backendless.Persistence.of(GroupParticipant.class).find(gpQuery, loadGPsCallback);
   }
 

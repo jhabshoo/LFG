@@ -113,7 +113,7 @@ public class AddGroup extends AppCompatActivity {
           int minute = Integer.valueOf(timeParts[1].split(" ")[0]);
 
           Group group = new Group(titleText.getText().toString(), descText.getText().toString(),
-            MainActivity.backendlessUser.getEmail(),
+            MainActivity.backendlessUser.getUserId(),
             minParticipantsText.getText().toString().isEmpty() ? 1 : Integer.valueOf(minParticipantsText.getText().toString()),
             maxParticipantsText.getText().toString().isEmpty() ? -1 : Integer.valueOf(maxParticipantsText.getText().toString()),
             new Date(Integer.valueOf(dateParts[2]), Integer.valueOf(dateParts[0]), Integer.valueOf(dateParts[1])),
