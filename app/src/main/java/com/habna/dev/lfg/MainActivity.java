@@ -126,6 +126,12 @@ public class MainActivity extends AppCompatActivity {
     Backendless.UserService.isValidLogin(isValidLoginCallback);
   }
 
+  @Override
+  protected void onRestart() {
+    super.onRestart();
+    loadGroups();
+  }
+
   private void startGroupActivity(Group group, boolean joined)  {
     GroupActivity.group = group;
     GroupActivity.joined = joined;
@@ -150,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void loadOpenGroups() {
+    openGroupListAdapter.clear();
     final Set<String> userGroups = new HashSet<>();
     AsyncCallback<BackendlessCollection<GroupParticipant>> loadGPCallback =
       new AsyncCallback<BackendlessCollection<GroupParticipant>>() {
@@ -191,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void loadJoinedGroups() {
+    joinedGroupListAdapter.clear();
     AsyncCallback<BackendlessCollection<GroupParticipant>> loadGPsCallback =
       new AsyncCallback<BackendlessCollection<GroupParticipant>>() {
       @Override

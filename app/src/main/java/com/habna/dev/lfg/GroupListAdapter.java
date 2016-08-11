@@ -66,4 +66,8 @@ public class GroupListAdapter extends BaseAdapter {
     }
     groups.add(g);
   }
+
+  public void clear() {
+    groups.clear();
+  }
 }
